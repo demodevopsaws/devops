@@ -1,0 +1,6 @@
+[webservers]
+web1.xyz.com ansible_host=192.168.0.200
+web2.xyz.com ansible_host=127.0.0.1
+
+[webservers:vars]
+ansible_become=true

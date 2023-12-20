@@ -1,0 +1,48 @@
+- hosts: webservers
+  become: true
+  tasks:
+    - name: performing aptupdate cmd
+      apt:
+        update_cache: yes
+
+    - name: upgrade cmd
+      apt:
+        name: "*"
+        state: latest
+
+    - name: install nginx cmd
+      apt:
+       name: "nginx"
+
+    - name: copying  default src file to client system 
+      copy:
+        src: "../src/default"
+        dest: "/etc/nginx/sites-available/default"
+      notify: "restart nginx service"
+          
+    - name: custom index file to var path html file
+      copy:
+        src: "../src/index.html"
+        dest: "/var/www/html"
+      notify: "restart nginx service"
+
+    - name: custom index file to usr/share path
+      copy:
+        src: "../src/index.html"
+        dest: "/usr/share/nginx/html"      
+      notify: "restart nginx service"
+
+    - name: Enable nginx service
+      systemd_service:
+        name: nginx
+        enabled: true
+
+  handlers:  
+    - name: restart nginx service
+      systemd_service:
+        name: nginx      
+        state: restarted
+             
+
+
+
